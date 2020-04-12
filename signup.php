@@ -1,45 +1,58 @@
-<?php 
-    require 'database.php';
+<?php
 
-    $message='';
+session_start();
 
-    if(!empty($_POST['email'])  && !empty($_POST['password']) ){
-        $sql = "INSERT INTO users (email ,password) VALUES (:email ,:password)";
-        $stmt = $conn->prepare($sql);
-        $stmt->bindParam(':email',$_POST['email']);
-        $password =password_hash($_POST['password'],PASSWORD_BCRYPT);
-        $stmt->bindParam(':password',$password);
-        if ($stmt->execute()) {
-            $message = 'Successful';
-        }else{
-            $message = 'Sorry the Have Errror   ';
-        }
-    }
+if (isset($_SESSION['user_id'])) {
+  header('Location: index.php');
+}
+
+require 'database.php';
+
+
+$message = '';
+
+if (!empty($_POST['email']) && !empty($_POST['password'])) {
+  $sql = "INSERT INTO users (email, password) VALUES (:email, :password)";
+  $stmt = $conn->prepare($sql);
+  $stmt->bindParam(':email', $_POST['email']);
+  $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
+  $stmt->bindParam(':password', $password);
+
+  if ($stmt->execute()) {
+    $message = 'Successfully created new user';
+  } else {
+    $message = 'Sorry there must have been an issue creating your account';
+  }
+}
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./assets/css/main.css">
-    <title>SignUp</title>
+  <meta charset="utf-8">
+  <title>SignUp</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
 </head>
+
 <body>
-    <?php require 'partials/header.php' ?>
-    <?php if(!empty($message)): ?>
-        <p><?php $message ?></p>
-    <?php endif; ?>
 
-    <h1>Registara</h1>
-    <span>or <a href="login.php">Login</a></span>
-    <form action="signup.php" method="post">
-        <!-- <label for="email">Email</label> -->
-        <input type="text" name="email" placeholder="joffreandres11@gmail.com">
-        <input type="password" name="password" placeholder="**********">
-        <input type="password" name="confirm_password" placeholder="**********">
-        <input type="submit" value="Send">
+  <?php require 'partials/header.php' ?>
+
+  <?php if (!empty($message)) : ?>
+    <p> <?= $message ?></p>
+  <?php endif; ?>
+  <div class="login-box">
+  <h1>Ingresa tus datos</h1>
+    <form action="signup.php" method="POST">
+      <input name="email" type="text" placeholder="email@email.com">
+      <input name="password" type="password" placeholder="Contraseña">
+      <input name="confirm_password" type="password" placeholder="Confirma Contraseña">
+      <input type="submit" value="Registrar">
+      <a href="login.php">Ya tengo Cuenta</a>
     </form>
+  </div>
 
-    
 </body>
+
 </html>

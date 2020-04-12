@@ -1,3 +1,3 @@
 <header>
-        <a href="/">App</a>
+  <a href="../index.php">Inicio</a>
 </header>
