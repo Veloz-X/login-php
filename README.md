@@ -23,4 +23,11 @@ Almacenamiento de los usuarios
 
 - Los usuarios son almacenados en MySQL con Su Id,email,password
  - Las contraseña de los usuarios estan encriptado
- - No se puede acceder a directorio de register o login si el us
+ - No se puede acceder a directorio de register o login si el ususario ya Inicio Sesion.
+ 
+session_start();
+
+if (isset($_SESSION['user_id'])) {
+  header('Location: index.php');
+}
+require 'database.php';
